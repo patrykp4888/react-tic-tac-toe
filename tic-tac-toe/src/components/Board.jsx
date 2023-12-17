@@ -2,7 +2,7 @@ import Strike from "./Strike";
 import Tile from "./Tile";
 
 function Board() {
-    return <div>
+    return <div className="board">
         <Tile/>
         <Tile/>
         <Tile/>
