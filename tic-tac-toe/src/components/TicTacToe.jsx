@@ -20,7 +20,7 @@ const winningCombinations = [
     {combo: [2,4,6], strikeClass: "strike-diagonal-2"}
 ];
 
-function checkWinner(tiles, setStrikeClass) {
+function checkWinner(tiles, setStrikeClass, setGameState) {
     for(const {combo, strikeClass} of winningCombinations){
         const tileValue1 = tiles[combo[0]]
         const tileValue2 = tiles[combo[1]]
@@ -28,7 +28,19 @@ function checkWinner(tiles, setStrikeClass) {
 
         if(tileValue1 !== null && tileValue1 === tileValue2 && tileValue1 === tileValue3){
             setStrikeClass(strikeClass)
+            if(tileValue1 === PLAYER_X){
+                setGameState(GameState.playerXWins);
+            }
+            else{
+                setGameState(GameState.playerOWins);
+            }
+            return;
         }
+    }
+
+    const areAllTilesFilledIn = tiles.every((tile) => tile !== null);
+    if (areAllTilesFilledIn){
+        setGameState(GameState.draw);
     }
 }
 
@@ -39,6 +51,10 @@ function TicTacToe(){
     const [gameState, setGameState] = useState(GameState.inProgress);
 
     const handleTileClick = (index)=>{
+        if(gameState !== GameState.inProgress){
+            return;
+        }
+
         if (tiles[index] !== null) {
             return;
         }
@@ -53,7 +69,7 @@ function TicTacToe(){
     }
 
     useEffect(()=>{
-        checkWinner(tiles, setStrikeClass);
+        checkWinner(tiles, setStrikeClass, setGameState);
     }, [tiles]);
 
     return (
